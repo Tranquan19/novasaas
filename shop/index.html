@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop — NOVA SAAS STUDIO</title>
+  <meta name="description" content="Browse our collection of AI-powered SaaS products for small and medium businesses.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0a;color:#e0e0e0;line-height:1.6;overflow-x:hidden}
+    a{color:#0066FF;text-decoration:none;transition:color .2s}
+    a:hover{color:#00D4FF}
+    img{max-width:100%;display:block}
+    ul{list-style:none}
+    ::selection{background:#0066FF;color:#fff}
+    ::-webkit-scrollbar{width:6px}
+    ::-webkit-scrollbar-track{background:#0a0a0a}
+    ::-webkit-scrollbar-thumb{background:#1a1a2e;border-radius:3px}
+    ::-webkit-scrollbar-thumb:hover{background:#0066FF}
+    .container{max-width:1200px;margin:0 auto;padding:0 24px}
+
+    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;padding:16px 0;transition:all .3s ease;background:rgba(10,10,10,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.05)}
+    .navbar .container{display:flex;align-items:center;justify-content:space-between}
+    .navbar .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;color:#fff;text-decoration:none}
+    .navbar .logo svg{flex-shrink:0}
+    .nav-links{display:flex;align-items:center;gap:32px}
+    .nav-links a{color:#999;font-size:14px;font-weight:500;transition:color .2s;position:relative}
+    .nav-links a:hover{color:#fff}
+    .nav-links .cart-link{position:relative}
+    .nav-links .cart-badge{position:absolute;top:-8px;right:-12px;background:#0066FF;color:#fff;font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+    .nav-links .btn-primary{padding:8px 20px;font-size:13px;display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#0066FF,#0052CC);color:#fff;padding:12px 28px;border-radius:8px;font-weight:600;font-size:15px;border:none;cursor:pointer;transition:all .3s ease;text-decoration:none}
+    .nav-links .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,102,255,0.35);color:#fff}
+
+    .page-header{padding:140px 0 60px;text-align:center;position:relative}
+    .page-header::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#0066FF,transparent)}
+    .page-header h1{font-size:clamp(32px,5vw,52px);font-weight:800;margin-bottom:12px;background:linear-gradient(135deg,#0066FF,#00D4FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .page-header p{color:#888;font-size:17px;max-width:600px;margin:0 auto}
+
+    .filters{padding:0 0 40px}
+    .filters .container{display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:center}
+    .search-box{position:relative;flex:1;min-width:260px;max-width:480px}
+    .search-box svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);pointer-events:none}
+    .search-box input{width:100%;padding:12px 16px 12px 44px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#e0e0e0;font-size:14px;font-family:inherit;outline:none;transition:border-color .3s}
+    .search-box input:focus{border-color:#0066FF}
+    .search-box input::placeholder{color:#666}
+    .filter-btns{display:flex;gap:8px;flex-wrap:wrap}
+    .filter-btn{padding:8px 18px;border-radius:20px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:#999;font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;transition:all .3s}
+    .filter-btn:hover{border-color:#0066FF;color:#fff}
+    .filter-btn.active{background:#0066FF;border-color:#0066FF;color:#fff}
+
+    .products-grid{padding:0 0 80px}
+    .products-grid .container{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:24px}
+    .product-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:16px;overflow:hidden;transition:all .4s ease;cursor:pointer}
+    .product-card:hover{transform:translateY(-6px);border-color:rgba(0,102,255,0.3);box-shadow:0 20px 60px rgba(0,102,255,0.1)}
+    .product-card .card-img{height:200px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+    .product-card .card-img svg{opacity:.6;transition:opacity .4s}
+    .product-card:hover .card-img svg{opacity:1}
+    .product-card .card-body{padding:24px}
+    .product-card .card-category{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#0066FF;margin-bottom:8px}
+    .product-card .card-title{font-size:20px;font-weight:700;color:#fff;margin-bottom:8px}
+    .product-card .card-desc{font-size:14px;color:#888;line-height:1.6;margin-bottom:16px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .product-card .card-footer{display:flex;align-items:center;justify-content:space-between;padding-top:16px;border-top:1px solid rgba(255,255,255,0.05)}
+    .product-card .card-price{font-size:18px;font-weight:700;color:#00D4FF}
+    .product-card .card-price span{font-size:13px;color:#888;font-weight:400}
+    .product-card .add-btn{padding:8px 18px;border-radius:8px;background:linear-gradient(135deg,#0066FF,#0052CC);color:#fff;font-size:13px;font-weight:600;border:none;cursor:pointer;transition:all .3s;font-family:inherit}
+    .product-card .add-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,102,255,0.4)}
+
+    .empty-state{text-align:center;padding:80px 24px;grid-column:1/-1}
+    .empty-state svg{opacity:.3;margin-bottom:16px}
+    .empty-state h3{color:#fff;font-size:22px;margin-bottom:8px}
+    .empty-state p{color:#666;font-size:15px}
+
+    .footer{border-top:1px solid rgba(255,255,255,0.05);padding:40px 0;text-align:center}
+    .footer p{color:#555;font-size:13px}
+
+    @media(max-width:768px){
+      .page-header{padding:120px 0 40px}
+      .products-grid .container{grid-template-columns:1fr}
+      .nav-links{gap:16px}
+      .nav-links a{font-size:12px}
+      .nav-links .btn-primary{padding:8px 14px;font-size:12px}
+      .filters .container{flex-direction:column}
+      .search-box{max-width:100%}
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/novasaas/" class="logo">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <rect x="2" y="2" width="28" height="28" rx="8" stroke="#0066FF" stroke-width="2"/>
+          <path d="M10 22V14l6 8V10" stroke="#00D4FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        NOVA
+      </a>
+      <div class="nav-links">
+        <a href="/novasaas/">Home</a>
+        <a href="/novasaas/shop/" class="cart-link">Shop</a>
+        <a href="/novasaas/shop/cart.html" class="cart-link">
+          Cart <span class="cart-badge" id="cartCount">0</span>
+        </a>
+        <a href="/novasaas/pages/services.html">Services</a>
+        <a href="/novasaas/pages/contact.html">Contact</a>
+        <a href="/novasaas/admin/login.html" class="btn-primary">Admin</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="page-header">
+    <div class="container">
+      <h1>SaaS Products</h1>
+      <p>AI-powered tools built for small and medium businesses. Browse, choose, and deploy in minutes.</p>
+    </div>
+  </section>
+
+  <section class="filters">
+    <div class="container">
+      <div class="search-box">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <circle cx="7" cy="7" r="5.5" stroke="#666" stroke-width="1.5"/>
+          <path d="M11 11l3.5 3.5" stroke="#666" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <input type="text" id="searchInput" placeholder="Search products..." oninput="renderProducts()">
+      </div>
+      <div class="filter-btns" id="filterBtns"></div>
+    </div>
+  </section>
+
+  <section class="products-grid">
+    <div class="container" id="productsContainer"></div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 NOVA SAAS STUDIO. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    const DEFAULT_PRODUCTS = [
+      { id: 'p1', name: 'NovaCRM', tagline: 'AI-Powered CRM for Small Businesses', description: 'NovaCRM is an intelligent customer relationship management platform designed specifically for small businesses. It uses AI to automatically log calls, suggest follow-ups, predict deal closures, and provide actionable insights. Manage contacts, track deals, automate workflows, and grow your revenue — all from a single, intuitive dashboard.', category: 'CRM', icon: 'crm', features: ['AI-powered lead scoring', 'Automated contact management', 'Email and calendar integration', 'Deal pipeline tracking', 'Custom workflow automation', 'Real-time analytics dashboard'], pricing: [
+          { name: 'Starter', price: 29, period: '/mo', popular: false, features: ['Up to 500 contacts', '2 users', 'Basic AI insights', 'Email support'] },
+          { name: 'Pro', price: 79, period: '/mo', popular: true, features: ['Up to 5,000 contacts', '10 users', 'Advanced AI predictions', 'API access', 'Priority support'] },
+          { name: 'Enterprise', price: 199, period: '/mo', popular: false, features: ['Unlimited contacts', 'Unlimited users', 'Custom AI models', 'Dedicated support', 'SLA guarantee'] }
+        ] },
+      { id: 'p2', name: 'NovaChat', tagline: 'AI Customer Support Chatbot', description: 'NovaChat is an AI-powered customer support chatbot that integrates seamlessly with WhatsApp, Facebook Messenger, and your website. It handles up to 80% of customer inquiries automatically, escalating complex issues to human agents. With natural language understanding and sentiment analysis, NovaChat delivers human-like conversations that keep your customers happy.', category: 'Chat', icon: 'chat', features: ['WhatsApp & Messenger integration', 'Natural language understanding', 'Sentiment analysis', 'Automated ticket creation', 'Multi-language support', 'Live chat handoff'], pricing: [
+          { name: 'Starter', price: 49, period: '/mo', popular: false, features: ['Up to 1,000 conversations/mo', '1 channel', 'Basic AI', 'Email support'] },
+          { name: 'Pro', price: 99, period: '/mo', popular: true, features: ['Up to 10,000 conversations/mo', '3 channels', 'Advanced AI', 'Analytics', 'Priority support'] },
+          { name: 'Enterprise', price: 249, period: '/mo', popular: false, features: ['Unlimited conversations', 'All channels', 'Custom AI training', 'Dedicated support', 'SLA'] }
+        ] },
+      { id: 'p3', name: 'NovaAnalytics', tagline: 'Business Intelligence with AI Insights', description: 'NovaAnalytics transforms your raw business data into clear, actionable insights. Connect your data sources — databases, spreadsheets, APIs — and get AI-generated reports, trend predictions, and anomaly detection. No data science team needed. Make smarter decisions with dashboards that actually make sense.', category: 'Analytics', icon: 'analytics', features: ['Drag-and-drop dashboard builder', 'AI-generated insights', 'Anomaly detection', 'Predictive forecasting', 'Custom report scheduling', '30+ data source connectors'], pricing: [
+          { name: 'Starter', price: 39, period: '/mo', popular: false, features: ['Up to 3 data sources', '5 dashboards', 'Daily reports', 'Email support'] },
+          { name: 'Pro', price: 89, period: '/mo', popular: true, features: ['Up to 10 data sources', 'Unlimited dashboards', 'Real-time reporting', 'AI predictions', 'Priority support'] },
+          { name: 'Enterprise', price: 189, period: '/mo', popular: false, features: ['Unlimited data sources', 'Custom integrations', 'White-label', 'Dedicated support', 'SLA'] }
+        ] },
+      { id: 'p4', name: 'NovaInvoice', tagline: 'Automated Invoicing & Payments', description: 'NovaInvoice streamlines your billing workflow from invoice creation to payment collection. Automatically generate and send invoices, track payment status, send reminders, and reconcile payments. Supports multiple currencies, recurring billing, and integrates with Stripe, PayPal, and bank transfers. Get paid faster with less effort.', category: 'Finance', icon: 'invoice', features: ['Automated invoice generation', 'Recurring billing', 'Multi-currency support', 'Payment gateway integration', 'Smart payment reminders', 'Expense tracking'], pricing: [
+          { name: 'Starter', price: 19, period: '/mo', popular: false, features: ['Up to 50 invoices/mo', '1 payment gateway', 'Basic templates', 'Email support'] },
+          { name: 'Pro', price: 49, period: '/mo', popular: true, features: ['Up to 500 invoices/mo', '3 payment gateways', 'Custom templates', 'Recurring billing', 'Priority support'] },
+          { name: 'Enterprise', price: 129, period: '/mo', popular: false, features: ['Unlimited invoices', 'All gateways', 'White-label', 'API access', 'Dedicated support'] }
+        ] },
+      { id: 'p5', name: 'NovaAI', tagline: 'Custom AI Agent Builder', description: 'NovaAI is a powerful platform for building custom AI agents tailored to your business workflows. Create intelligent automation that handles customer onboarding, data processing, content generation, lead qualification, and more. No coding required — use our visual builder to design agents that understand your business rules and data.', category: 'AI', icon: 'ai', features: ['Visual AI agent builder', 'Custom knowledge base', 'Workflow automation', 'API and webhook integration', 'Multi-model support (GPT, Claude)', 'Performance monitoring'], pricing: [
+          { name: 'Starter', price: 99, period: '/mo', popular: false, features: ['1 AI agent', '10k queries/mo', 'Basic integrations', 'Email support'] },
+          { name: 'Pro', price: 249, period: '/mo', popular: true, features: ['5 AI agents', '100k queries/mo', 'Advanced integrations', 'Custom training', 'Priority support'] },
+          { name: 'Enterprise', price: 599, period: '/mo', popular: false, features: ['Unlimited agents', '1M+ queries/mo', 'Full API access', 'Dedicated infrastructure', '24/7 support'] }
+        ] },
+      { id: 'p6', name: 'NovaDocs', tagline: 'AI Document Generation & Management', description: 'NovaDocs revolutionizes how businesses create, manage, and collaborate on documents. Using AI, it generates professional proposals, contracts, reports, and presentations in seconds. Features smart templates, version control, team collaboration, e-signature integration, and a powerful search that finds any document instantly.', category: 'Productivity', icon: 'docs', features: ['AI document generation', 'Smart templates library', 'Real-time collaboration', 'Version control', 'E-signature integration', 'Advanced document search'], pricing: [
+          { name: 'Starter', price: 29, period: '/mo', popular: false, features: ['Up to 100 documents', '5 users', 'Basic templates', 'Email support'] },
+          { name: 'Pro', price: 69, period: '/mo', popular: true, features: ['Up to 1,000 documents', '25 users', 'AI generation', 'E-signatures', 'Priority support'] },
+          { name: 'Enterprise', price: 179, period: '/mo', popular: false, features: ['Unlimited documents', 'Unlimited users', 'Custom AI training', 'API access', 'Dedicated support'] }
+        ] }
+    ];
+
+    const PRODUCT_ICONS = {
+      crm: '<svg width="64" height="64" viewBox="0 0 64 64" fill="none"><rect x="8" y="12" width="48" height="40" rx="6" stroke="#0066FF" stroke-width="2"/><circle cx="24" cy="28" r="5" stroke="#00D4FF" stroke-width="2"/><circle cx="40" cy="28" r="5" stroke="#00D4FF" stroke-width="2"/><path d="M20 40c0-4 4-6 12-6s12 2 12 6" stroke="#00D4FF" stroke-width="2" stroke-linecap="round"/></svg>',
+      chat: '<svg width="64" height="64" viewBox="0 0 64 64" fill="none"><rect x="8" y="8" width="48" height="40" rx="8" stroke="#0066FF" stroke-width="2"/><path d="M18 22h28M18 32h20M18 38h12" stroke="#00D4FF" stroke-width="2" stroke-linecap="round"/></svg>',
+      analytics: '<svg width="64" height="64" viewBox="0 0 64 64" fill="none"><rect x="8" y="8" width="48" height="48" rx="8" stroke="#0066FF" stroke-width="2"/><path d="M16 48V28l8 4V48M28 48V18l8 8v22M40 48V34l8-4v18" stroke="#00D4FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      invoice: '<svg width="64" height="64" viewBox="0 0 64 64" fill="none"><rect x="12" y="6" width="40" height="52" rx="4" stroke="#0066FF" stroke-width="2"/><path d="M20 20h24M20 28h24M20 36h16M20 44h12" stroke="#00D4FF" stroke-width="2" stroke-linecap="round"/></svg>',
+      ai: '<svg width="64" height="64" viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="20" stroke="#0066FF" stroke-width="2"/><path d="M32 18v28M18 32h28" stroke="#00D4FF" stroke-width="2" stroke-linecap="round"/><circle cx="32" cy="32" r="8" stroke="#0066FF" stroke-width="2" stroke-dasharray="2 2"/></svg>',
+      docs: '<svg width="64" height="64" viewBox="0 0 64 64" fill="none"><path d="M16 8h22l12 12v38H16V8z" stroke="#0066FF" stroke-width="2"/><path d="M38 8v12h12M22 28h20M22 36h20M22 44h14" stroke="#00D4FF" stroke-width="2" stroke-linecap="round"/></svg>'
+    };
+
+    const CATEGORY_ICONS = {
+      CRM: '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="5" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M3 12c0-2 2-3 4-3s4 1 4 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+      Chat: '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="9" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M4 5h6M4 8h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+      Analytics: '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M3 11V7l2 1V11M6 11V5l2 2v4M9 11V8l2-1v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+      Finance: '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="1" width="10" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M4 4h6M4 7h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+      AI: '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M7 3v8M3 7h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+      Productivity: '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 1h5l3 3v8a1 1 0 01-1 1H3a1 1 0 01-1-1V2a1 1 0 011-1z" stroke="currentColor" stroke-width="1.5"/><path d="M8 1v3h3M4 5h6M4 8h6M4 11h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>'
+    };
+
+    function getProducts() {
+      let p = localStorage.getItem('nova_products');
+      if (!p) {
+        localStorage.setItem('nova_products', JSON.stringify(DEFAULT_PRODUCTS));
+        return JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
+      }
+      return JSON.parse(p);
+    }
+
+    function getCart() {
+      let c = localStorage.getItem('nova_cart');
+      return c ? JSON.parse(c) : [];
+    }
+
+    function updateCartBadge() {
+      const c = getCart();
+      const el = document.getElementById('cartCount');
+      if (el) {
+        const qty = c.reduce((s, i) => s + i.qty, 0);
+        el.textContent = qty;
+        el.style.display = qty > 0 ? 'flex' : 'none';
+      }
+    }
+
+    function addToCart(productId, planName) {
+      const cart = getCart();
+      const existing = cart.find(i => i.productId === productId && i.plan === planName);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        const products = getProducts();
+        const product = products.find(p => p.id === productId);
+        const plan = product.pricing.find(p => p.name === planName);
+        cart.push({ productId, plan: planName, productName: product.name, price: plan.price, qty: 1 });
+      }
+      localStorage.setItem('nova_cart', JSON.stringify(cart));
+      updateCartBadge();
+      showToast('Added to cart!');
+    }
+
+    function showToast(msg) {
+      let t = document.createElement('div');
+      t.textContent = msg;
+      Object.assign(t.style, {
+        position:'fixed', bottom:'24px', right:'24px', background:'#0066FF', color:'#fff',
+        padding:'12px 24px', borderRadius:'10px', fontSize:'14px', fontWeight:'600',
+        zIndex:'9999', boxShadow:'0 8px 30px rgba(0,102,255,0.4)',
+        opacity:'0', transform:'translateY(10px)', transition:'all .3s ease'
+      });
+      document.body.appendChild(t);
+      requestAnimationFrame(() => { t.style.opacity = '1'; t.style.transform = 'translateY(0)'; });
+      setTimeout(() => {
+        t.style.opacity = '0'; t.style.transform = 'translateY(10px)';
+        setTimeout(() => t.remove(), 300);
+      }, 2000);
+    }
+
+    function formatPrice(n) { return '$' + n.toLocaleString(); }
+
+    function renderProducts() {
+      const products = getProducts();
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      const activeCat = document.querySelector('.filter-btn.active');
+      const category = activeCat ? activeCat.dataset.cat : 'all';
+      const container = document.getElementById('productsContainer');
+
+      let filtered = products;
+      if (category !== 'all') filtered = filtered.filter(p => p.category === category);
+      if (search) filtered = filtered.filter(p =>
+        p.name.toLowerCase().includes(search) ||
+        p.description.toLowerCase().includes(search) ||
+        p.tagline.toLowerCase().includes(search)
+      );
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="empty-state"><svg width="64" height="64" viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="24" stroke="#555" stroke-width="2"/><path d="M22 28h20M22 36h16" stroke="#555" stroke-width="2" stroke-linecap="round"/></svg><h3>No products found</h3><p>Try a different search or category filter.</p></div>';
+        return;
+      }
+
+      container.innerHTML = filtered.map(p => {
+        const minPrice = Math.min(...p.pricing.map(pl => pl.price));
+        const icon = PRODUCT_ICONS[p.icon] || PRODUCT_ICONS.crm;
+        const catIcon = CATEGORY_ICONS[p.category] || '';
+        return '<div class="product-card" onclick="window.location=\'product.html?id=' + p.id + '\'">' +
+          '<div class="card-img" style="background:radial-gradient(ellipse at center,rgba(0,102,255,0.08),transparent)">' + icon + '</div>' +
+          '<div class="card-body">' +
+          '<div class="card-category">' + catIcon + ' ' + p.category + '</div>' +
+          '<div class="card-title">' + p.name + '</div>' +
+          '<div class="card-desc">' + p.tagline + '</div>' +
+          '<div class="card-footer">' +
+          '<div class="card-price">' + formatPrice(minPrice) + '<span>/mo starting</span></div>' +
+          '<button class="add-btn" onclick="event.stopPropagation();addToCart(\'' + p.id + '\',\'' + p.pricing[0].name + '\')">Add to Cart</button>' +
+          '</div></div></div>';
+      }).join('');
+    }
+
+    function renderFilters() {
+      const products = getProducts();
+      const cats = ['all', ...new Set(products.map(p => p.category))];
+      const container = document.getElementById('filterBtns');
+      container.innerHTML = cats.map(c => {
+        let label = c === 'all' ? 'All' : c;
+        let icon = c === 'all' ? '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M4 5h6M4 8h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' : (CATEGORY_ICONS[c] || '');
+        return '<button class="filter-btn' + (c === 'all' ? ' active' : '') + '" data-cat="' + c + '" onclick="document.querySelectorAll(\'.filter-btn\').forEach(b=>b.classList.remove(\'active\'));this.classList.add(\'active\');renderProducts()">' + icon + ' ' + label + '</button>';
+      }).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderFilters();
+      renderProducts();
+      updateCartBadge();
+    });
+  </script>
+</body>
+</html>

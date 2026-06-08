@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — NOVA SAAS STUDIO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0a;color:#e0e0e0;line-height:1.6;overflow-x:hidden}
+    ::selection{background:#0066FF;color:#fff}
+    ::-webkit-scrollbar{width:6px}
+    ::-webkit-scrollbar-track{background:#0a0a0a}
+    ::-webkit-scrollbar-thumb{background:#1a1a2e;border-radius:3px}
+
+    .layout{display:flex;min-height:100vh}
+    
+    .sidebar{width:240px;background:rgba(255,255,255,0.02);border-right:1px solid rgba(255,255,255,0.05);padding:24px 16px;position:fixed;top:0;left:0;bottom:0;overflow-y:auto}
+    .sidebar-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;color:#fff;margin-bottom:32px;text-decoration:none}
+    .sidebar-logo svg{flex-shrink:0}
+    .sidebar-nav{display:flex;flex-direction:column;gap:4px}
+    .sidebar-nav a{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;font-size:14px;font-weight:500;color:#888;text-decoration:none;transition:all .2s}
+    .sidebar-nav a:hover{background:rgba(255,255,255,0.04);color:#e0e0e0}
+    .sidebar-nav a.active{background:rgba(0,102,255,0.1);color:#0066FF}
+    .sidebar-nav a.logout{margin-top:auto;color:#555}
+    .sidebar-nav a.logout:hover{color:#ff4444;background:rgba(255,68,68,0.06)}
+    .sidebar-spacer{flex:1}
+
+    .main{margin-left:240px;flex:1;padding:32px 40px;min-height:100vh}
+    .main-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;flex-wrap:wrap;gap:16px}
+    .main-header h1{font-size:26px;font-weight:800;color:#fff}
+    .main-header .date{color:#666;font-size:14px}
+
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px}
+    .stat-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:20px;transition:all .3s}
+    .stat-card:hover{border-color:rgba(0,102,255,0.2);transform:translateY(-2px)}
+    .stat-card .stat-icon{margin-bottom:12px;opacity:.6}
+    .stat-card .stat-value{font-size:28px;font-weight:800;color:#fff;margin-bottom:2px}
+    .stat-card .stat-label{font-size:13px;color:#888}
+    .stat-card .stat-change{font-size:12px;margin-top:4px;color:#00D4FF}
+
+    .dashboard-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:24px;margin-bottom:32px}
+
+    .card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:24px}
+    .card h2{font-size:16px;font-weight:700;color:#fff;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+    .card h2 a{font-size:12px;font-weight:500;color:#0066FF;text-decoration:none}
+
+    .recent-orders-table{width:100%;border-collapse:collapse}
+    .recent-orders-table th{text-align:left;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#666;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.06)}
+    .recent-orders-table td{padding:10px 12px;font-size:13px;border-bottom:1px solid rgba(255,255,255,0.03)}
+    .recent-orders-table tr:last-child td{border-bottom:none}
+    .recent-orders-table .order-id{color:#0066FF;font-weight:600}
+    .recent-orders-table .order-customer{color:#ccc}
+    .recent-orders-table .order-total{color:#00D4FF;font-weight:600}
+    
+    .status-badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600}
+    .status-pending{background:rgba(255,183,0,0.1);color:#ffb700}
+    .status-processing{background:rgba(0,102,255,0.1);color:#0066FF}
+    .status-completed{background:rgba(0,212,255,0.1);color:#00D4FF}
+    .status-cancelled{background:rgba(255,68,68,0.1);color:#ff4444}
+
+    .chart-container{display:flex;align-items:flex-end;gap:6px;height:160px;padding:20px 0 0}
+    .chart-bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+    .chart-bar .bar{width:100%;border-radius:4px 4px 0 0;min-height:4px;transition:height .6s ease;background:linear-gradient(to top,#0066FF,#00D4FF)}
+    .chart-bar .bar-label{font-size:10px;color:#666;white-space:nowrap}
+
+    .no-data{text-align:center;padding:40px 0;color:#666;font-size:14px}
+
+    .footer-text{text-align:center;color:#555;font-size:12px;padding:20px 0}
+
+    @media(max-width:768px){
+      .sidebar{width:60px;padding:16px 8px}
+      .sidebar-logo span,.sidebar-nav a span{display:none}
+      .sidebar-nav a{justify-content:center;padding:10px}
+      .main{margin-left:60px;padding:24px 16px}
+      .stats-grid{grid-template-columns:repeat(2,1fr)}
+      .dashboard-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a href="/novasaas/admin/" class="sidebar-logo">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect x="2" y="2" width="28" height="28" rx="8" stroke="#0066FF" stroke-width="2"/><path d="M10 22V14l6 8V10" stroke="#00D4FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>NOVA Admin</span>
+      </a>
+      <nav class="sidebar-nav" style="display:flex;flex-direction:column;height:calc(100vh - 100px)">
+        <a href="/novasaas/admin/" class="active">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="10" y="2" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="2" y="10" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="10" y="10" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="/novasaas/admin/products.html">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="14" height="14" rx="3" stroke="currentColor" stroke-width="1.5"/><path d="M6 5h6M6 9h6M6 13h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <span>Products</span>
+        </a>
+        <a href="/novasaas/admin/orders.html">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="3" y="2" width="12" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M6 6h6M6 9h6M6 12h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <span>Orders</span>
+        </a>
+        <a href="/novasaas/admin/customers.html">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="6" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M3 16c0-4 3-6 6-6s6 2 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <span>Customers</span>
+        </a>
+        <div style="flex:1"></div>
+        <a href="#" class="logout" onclick="logout()">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M6 15H4a1 1 0 01-1-1V4a1 1 0 011-1h2M12 11l3-3-3-3M15 8H7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Logout</span>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="main" id="mainContent">
+      <div class="main-header">
+        <div><h1>Dashboard</h1><div class="date" id="currentDate"></div></div>
+        <a href="/novasaas/" style="display:inline-flex;align-items:center;gap:6px;color:#888;font-size:13px;text-decoration:none">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7l6-5 6 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M3 5.5V12a1 1 0 001 1h2v-3h2v3h2a1 1 0 001-1V5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          View Site
+        </a>
+      </div>
+
+      <div class="stats-grid" id="statsGrid"></div>
+
+      <div class="dashboard-grid">
+        <div class="card">
+          <h2>Recent Orders <a href="/novasaas/admin/orders.html">View All</a></h2>
+          <div id="recentOrders"></div>
+        </div>
+        <div class="card">
+          <h2>Monthly Revenue</h2>
+          <div id="revenueChart"></div>
+        </div>
+      </div>
+      <div class="footer-text">&copy; 2025 NOVA SAAS STUDIO Admin</div>
+    </main>
+  </div>
+
+  <script>
+    // Auth check
+    if (localStorage.getItem('nova_admin_auth') !== 'true') {
+      window.location.href = '/novasaas/admin/login.html';
+    }
+
+    function logout() {
+      localStorage.removeItem('nova_admin_auth');
+      window.location.href = '/novasaas/admin/login.html';
+    }
+
+    function getProducts() {
+      let p = localStorage.getItem('nova_products');
+      if (!p) return [];
+      return JSON.parse(p);
+    }
+
+    function getOrders() {
+      let o = localStorage.getItem('nova_orders');
+      return o ? JSON.parse(o) : [];
+    }
+
+    function getCustomers() {
+      let c = localStorage.getItem('nova_customers');
+      return c ? JSON.parse(c) : [];
+    }
+
+    function formatPrice(n) { return '$' + n.toLocaleString(); }
+
+    function statusClass(s) {
+      if (!s) return 'status-pending';
+      const map = { 'Pending':'status-pending', 'Processing':'status-processing', 'Completed':'status-completed', 'Shipped':'status-processing', 'Delivered':'status-completed', 'Cancelled':'status-cancelled' };
+      return map[s] || 'status-pending';
+    }
+
+    function init() {
+      // Seed demo data if empty
+      const orders = getOrders();
+      if (orders.length === 0) {
+        const demoOrders = [
+          { id:'ORD-DEMO-001', customer:{name:'Sarah Johnson',email:'sarah@example.com',phone:'+1 555 0101',company:'TechFlow Inc.'}, items:[{productName:'NovaCRM',plan:'Pro',price:79,qty:1}], total:79, status:'Completed', createdAt:'2025-05-28T10:30:00Z' },
+          { id:'ORD-DEMO-002', customer:{name:'Michael Chen',email:'michael@example.com',phone:'+1 555 0102',company:'DataSync LLC'}, items:[{productName:'NovaAnalytics',plan:'Pro',price:89,qty:1},{productName:'NovaChat',plan:'Starter',price:49,qty:1}], total:138, status:'Processing', createdAt:'2025-05-30T14:15:00Z' },
+          { id:'ORD-DEMO-003', customer:{name:'Emily Rodriguez',email:'emily@example.com',phone:'+1 555 0103',company:'CloudNine Services'}, items:[{productName:'NovaInvoice',plan:'Pro',price:49,qty:1}], total:49, status:'Pending', createdAt:'2025-06-01T09:00:00Z' },
+          { id:'ORD-DEMO-004', customer:{name:'James Wilson',email:'james@example.com',phone:'+1 555 0104',company:'OmniCorp'}, items:[{productName:'NovaAI',plan:'Starter',price:99,qty:1}], total:99, status:'Completed', createdAt:'2025-05-25T16:45:00Z' },
+          { id:'ORD-DEMO-005', customer:{name:'Lisa Park',email:'lisa@example.com',phone:'+1 555 0105',company:'BrightPath Solutions'}, items:[{productName:'NovaDocs',plan:'Pro',price:69,qty:1},{productName:'NovaCRM',plan:'Starter',price:29,qty:1}], total:98, status:'Completed', createdAt:'2025-05-20T11:20:00Z' },
+          { id:'ORD-DEMO-006', customer:{name:'David Kim',email:'david@example.com',phone:'+1 555 0106',company:'NexGen Tech'}, items:[{productName:'NovaChat',plan:'Pro',price:99,qty:1}], total:99, status:'Cancelled', createdAt:'2025-05-18T08:30:00Z' },
+          { id:'ORD-DEMO-007', customer:{name:'Anna Schmidt',email:'anna@example.com',phone:'+1 555 0107',company:'Schmidt Consulting'}, items:[{productName:'NovaCRM',plan:'Enterprise',price:199,qty:1}], total:199, status:'Processing', createdAt:'2025-06-02T13:00:00Z' }
+        ];
+        localStorage.setItem('nova_orders', JSON.stringify(demoOrders));
+
+        const demoCustomers = [
+          { name:'Sarah Johnson',email:'sarah@example.com',phone:'+1 555 0101',company:'TechFlow Inc.',orders:1,lastOrder:'2025-05-28T10:30:00Z' },
+          { name:'Michael Chen',email:'michael@example.com',phone:'+1 555 0102',company:'DataSync LLC',orders:1,lastOrder:'2025-05-30T14:15:00Z' },
+          { name:'Emily Rodriguez',email:'emily@example.com',phone:'+1 555 0103',company:'CloudNine Services',orders:1,lastOrder:'2025-06-01T09:00:00Z' },
+          { name:'James Wilson',email:'james@example.com',phone:'+1 555 0104',company:'OmniCorp',orders:1,lastOrder:'2025-05-25T16:45:00Z' },
+          { name:'Lisa Park',email:'lisa@example.com',phone:'+1 555 0105',company:'BrightPath Solutions',orders:1,lastOrder:'2025-05-20T11:20:00Z' },
+          { name:'David Kim',email:'david@example.com',phone:'+1 555 0106',company:'NexGen Tech',orders:1,lastOrder:'2025-05-18T08:30:00Z' },
+          { name:'Anna Schmidt',email:'anna@example.com',phone:'+1 555 0107',company:'Schmidt Consulting',orders:1,lastOrder:'2025-06-02T13:00:00Z' }
+        ];
+        localStorage.setItem('nova_customers', JSON.stringify(demoCustomers));
+      }
+
+      render();
+    }
+
+    function render() {
+      const products = getProducts();
+      const orders = getOrders();
+      const customers = getCustomers();
+
+      const totalRevenue = orders.filter(o => o.status === 'Completed' || o.status === 'Processing' || o.status === 'Pending').reduce((s,o) => s + o.total, 0);
+      const pendingOrders = orders.filter(o => o.status === 'Pending').length;
+      const activeProducts = products.length;
+      const totalCustomers = customers.length;
+
+      document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+      document.getElementById('statsGrid').innerHTML =
+        '<div class="stat-card"><div class="stat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 16l6-6 4 4 6-6" stroke="#0066FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="stat-value">' + formatPrice(totalRevenue) + '</div><div class="stat-label">Total Revenue</div></div>' +
+        '<div class="stat-card"><div class="stat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="#00D4FF" stroke-width="2"/><path d="M8 8h8M8 12h6M8 16h4" stroke="#00D4FF" stroke-width="2" stroke-linecap="round"/></svg></div><div class="stat-value">' + orders.length + '</div><div class="stat-label">Total Orders</div></div>' +
+        '<div class="stat-card"><div class="stat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="4" stroke="#0066FF" stroke-width="2"/><rect x="8" y="8" width="8" height="8" rx="2" stroke="#00D4FF" stroke-width="2"/></svg></div><div class="stat-value">' + activeProducts + '</div><div class="stat-label">Active Products</div></div>' +
+        '<div class="stat-card"><div class="stat-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#0066FF" stroke-width="2"/><path d="M4 22c0-5 4-7 8-7s8 2 8 7" stroke="#00D4FF" stroke-width="2" stroke-linecap="round"/></svg></div><div class="stat-value">' + totalCustomers + '</div><div class="stat-label">Customers</div><div class="stat-change">' + pendingOrders + ' pending orders</div></div>';
+
+      // Recent orders
+      const recent = orders.slice(0, 5);
+      if (recent.length === 0) {
+        document.getElementById('recentOrders').innerHTML = '<div class="no-data">No orders yet.</div>';
+      } else {
+        document.getElementById('recentOrders').innerHTML =
+          '<table class="recent-orders-table"><thead><tr><th>Order</th><th>Customer</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead><tbody>' +
+          recent.map(o => '<tr><td class="order-id">' + o.id + '</td><td class="order-customer">' + o.customer.name + '</td><td class="order-total">' + formatPrice(o.total) + '</td><td><span class="status-badge ' + statusClass(o.status) + '">' + o.status + '</span></td><td style="color:#888;font-size:12px">' + new Date(o.createdAt).toLocaleDateString() + '</td></tr>').join('') +
+          '</tbody></table>';
+      }
+
+      // Revenue chart (last 6 months)
+      const months = [];
+      const now = new Date();
+      for (let i = 5; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        months.push({ label: d.toLocaleString('en-US', { month:'short' }), year: d.getFullYear(), month: d.getMonth(), revenue: 0 });
+      }
+      orders.filter(o => o.status !== 'Cancelled').forEach(o => {
+        const d = new Date(o.createdAt);
+        const m = months.find(m => m.month === d.getMonth() && m.year === d.getFullYear());
+        if (m) m.revenue += o.total;
+      });
+      const maxRev = Math.max(...months.map(m => m.revenue), 1);
+      const chartContainer = document.getElementById('revenueChart');
+      chartContainer.innerHTML = '<div class="chart-container">' +
+        months.map(m => {
+          const pct = Math.max((m.revenue / maxRev) * 100, 4);
+          return '<div class="chart-bar"><div class="bar" style="height:' + pct + '%"></div><div class="bar-label">' + m.label + '</div></div>';
+        }).join('') +
+        '</div>';
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout — NOVA SAAS STUDIO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0a;color:#e0e0e0;line-height:1.6;overflow-x:hidden}
+    a{color:#0066FF;text-decoration:none}
+    ::selection{background:#0066FF;color:#fff}
+    ::-webkit-scrollbar{width:6px}
+    ::-webkit-scrollbar-track{background:#0a0a0a}
+    ::-webkit-scrollbar-thumb{background:#1a1a2e;border-radius:3px}
+    .container{max-width:900px;margin:0 auto;padding:0 24px}
+
+    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;padding:16px 0;background:rgba(10,10,10,0.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.05)}
+    .navbar .container{display:flex;align-items:center;justify-content:space-between}
+    .navbar .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;color:#fff;text-decoration:none}
+    .nav-links{display:flex;align-items:center;gap:32px}
+    .nav-links a{color:#999;font-size:14px;font-weight:500;transition:color .2s}
+    .nav-links a:hover{color:#fff}
+    .nav-links .cart-badge{position:absolute;top:-8px;right:-12px;background:#0066FF;color:#fff;font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+
+    .page{padding:120px 0 60px;min-height:80vh}
+    .page h1{font-size:clamp(28px,4vw,38px);font-weight:800;margin-bottom:32px;background:linear-gradient(135deg,#0066FF,#00D4FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+    .checkout-layout{display:grid;grid-template-columns:1.2fr 1fr;gap:32px;align-items:start}
+
+    .form-section{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:32px}
+    .form-section h2{font-size:18px;font-weight:700;color:#fff;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)}
+
+    .form-group{margin-bottom:16px}
+    .form-group label{display:block;font-size:13px;font-weight:600;color:#999;margin-bottom:6px}
+    .form-group input{width:100%;padding:12px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#e0e0e0;font-size:14px;font-family:inherit;outline:none;transition:border-color .3s}
+    .form-group input:focus{border-color:#0066FF}
+    .form-group input::placeholder{color:#555}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+    .summary-section{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:32px;position:sticky;top:100px}
+    .summary-section h2{font-size:18px;font-weight:700;color:#fff;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)}
+
+    .summary-item{display:flex;justify-content:space-between;padding:8px 0;font-size:14px;color:#ccc}
+    .summary-item .s-name{color:#999}
+    .summary-item .s-price{font-weight:600;color:#00D4FF}
+    .summary-divider{height:1px;background:rgba(255,255,255,0.06);margin:12px 0}
+    .summary-total{display:flex;justify-content:space-between;font-size:20px;font-weight:800;color:#fff;padding-top:8px}
+    .summary-total .st-amount{color:#00D4FF}
+
+    .place-order-btn{width:100%;padding:16px;border-radius:12px;border:none;background:linear-gradient(135deg,#0066FF,#0052CC);color:#fff;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;transition:all .3s;margin-top:20px}
+    .place-order-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,102,255,0.35)}
+    .place-order-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+    .success-msg{text-align:center;padding:60px 24px}
+    .success-msg svg{margin-bottom:16px}
+    .success-msg h2{color:#fff;font-size:24px;margin-bottom:8px}
+    .success-msg p{color:#888;font-size:15px;margin-bottom:24px}
+    .success-msg a{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#0066FF,#0052CC);color:#fff;padding:12px 28px;border-radius:8px;font-weight:600;text-decoration:none;transition:all .3s}
+    .success-msg a:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,102,255,0.35)}
+
+    .error{color:#ff4444;font-size:12px;margin-top:4px;display:none}
+
+    .footer{border-top:1px solid rgba(255,255,255,0.05);padding:40px 0;text-align:center}
+    .footer p{color:#555;font-size:13px}
+
+    @media(max-width:768px){
+      .checkout-layout{grid-template-columns:1fr}
+      .form-row{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/novasaas/" class="logo">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect x="2" y="2" width="28" height="28" rx="8" stroke="#0066FF" stroke-width="2"/><path d="M10 22V14l6 8V10" stroke="#00D4FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        NOVA
+      </a>
+      <div class="nav-links">
+        <a href="/novasaas/">Home</a>
+        <a href="/novasaas/shop/">Shop</a>
+        <a href="/novasaas/shop/cart.html" style="position:relative">Cart <span class="cart-badge" id="cartCount">0</span></a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="page">
+    <div class="container">
+      <h1>Checkout</h1>
+      <div id="checkoutContent"></div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container"><p>&copy; 2025 NOVA SAAS STUDIO. All rights reserved.</p></div>
+  </footer>
+
+  <script>
+    function getCart() { let c = localStorage.getItem('nova_cart'); return c ? JSON.parse(c) : []; }
+    function getOrders() { let o = localStorage.getItem('nova_orders'); return o ? JSON.parse(o) : []; }
+    function getCustomers() { let c = localStorage.getItem('nova_customers'); return c ? JSON.parse(c) : []; }
+
+    function updateBadge() {
+      const cart = getCart();
+      const qty = cart.reduce((s,i) => s+i.qty, 0);
+      const el = document.getElementById('cartCount');
+      if (el) { el.textContent = qty; el.style.display = qty > 0 ? 'flex' : 'none'; }
+    }
+
+    function renderCheckout() {
+      const cart = getCart();
+      if (cart.length === 0) {
+        document.getElementById('checkoutContent').innerHTML = '<div class="success-msg"><svg width="64" height="64" viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="24" stroke="#555" stroke-width="2"/><path d="M22 28l4 4 8-8" stroke="#555" stroke-width="2.5" stroke-linecap="round"/></svg><h2>Your cart is empty</h2><p>Add some products before checking out.</p><a href="/novasaas/shop/">Browse Products</a></div>';
+        return;
+      }
+
+      const total = cart.reduce((s,i) => s + i.price * i.qty, 0);
+
+      document.getElementById('checkoutContent').innerHTML =
+        '<div class="checkout-layout">' +
+        '<div class="form-section">' +
+        '<h2>Customer Information</h2>' +
+        '<div class="form-group"><label>Full Name</label><input type="text" id="cName" placeholder="John Doe"></div>' +
+        '<div class="form-row">' +
+        '<div class="form-group"><label>Email</label><input type="email" id="cEmail" placeholder="john@example.com"></div>' +
+        '<div class="form-group"><label>Phone</label><input type="tel" id="cPhone" placeholder="+1 234 567 890"></div>' +
+        '</div>' +
+        '<div class="form-group"><label>Company</label><input type="text" id="cCompany" placeholder="Your Company Ltd."></div>' +
+        '</div>' +
+        '<div class="summary-section">' +
+        '<h2>Order Summary</h2>' +
+        cart.map(i => '<div class="summary-item"><span class="s-name">' + i.productName + ' (' + i.plan + ') x' + i.qty + '</span><span class="s-price">$' + (i.price * i.qty).toLocaleString() + '</span></div>').join('') +
+        '<div class="summary-divider"></div>' +
+        '<div class="summary-total"><span>Total (monthly)</span><span class="st-amount">$' + total.toLocaleString() + '</span></div>' +
+        '<button class="place-order-btn" id="placeOrderBtn" onclick="placeOrder()">Place Order</button>' +
+        '</div></div>';
+    }
+
+    function placeOrder() {
+      const name = document.getElementById('cName').value.trim();
+      const email = document.getElementById('cEmail').value.trim();
+      const phone = document.getElementById('cPhone').value.trim();
+      const company = document.getElementById('cCompany').value.trim();
+      const btn = document.getElementById('placeOrderBtn');
+
+      if (!name || !email || !phone) {
+        alert('Please fill in your name, email, and phone number.');
+        return;
+      }
+      if (!email.includes('@')) {
+        alert('Please enter a valid email address.');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Processing...';
+
+      const cart = getCart();
+      const total = cart.reduce((s,i) => s + i.price * i.qty, 0);
+      const orderId = 'ORD-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substr(2,4).toUpperCase();
+
+      const order = {
+        id: orderId,
+        customer: { name, email, phone, company },
+        items: cart.map(i => ({ productId: i.productId, productName: i.productName, plan: i.plan, price: i.price, qty: i.qty })),
+        total: total,
+        status: 'Pending',
+        createdAt: new Date().toISOString()
+      };
+
+      const orders = getOrders();
+      orders.unshift(order);
+      localStorage.setItem('nova_orders', JSON.stringify(orders));
+
+      // Save customer
+      const customers = getCustomers();
+      const existing = customers.findIndex(c => c.email === email);
+      if (existing >= 0) {
+        customers[existing].orders = (customers[existing].orders || 0) + 1;
+        customers[existing].lastOrder = new Date().toISOString();
+      } else {
+        customers.push({ name, email, phone, company, orders: 1, lastOrder: new Date().toISOString() });
+      }
+      localStorage.setItem('nova_customers', JSON.stringify(customers));
+
+      // Clear cart
+      localStorage.setItem('nova_cart', '[]');
+      updateBadge();
+
+      // Show success
+      document.getElementById('checkoutContent').innerHTML =
+        '<div class="success-msg">' +
+        '<svg width="72" height="72" viewBox="0 0 72 72" fill="none"><circle cx="36" cy="36" r="28" stroke="#00D4FF" stroke-width="3"/><path d="M24 36l8 8 16-16" stroke="#00D4FF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+        '<h2>Order Placed Successfully!</h2>' +
+        '<p>Your order <strong>' + orderId + '</strong> has been placed. We\'ll send a confirmation to <strong>' + email + '</strong>.</p>' +
+        '<a href="/novasaas/shop/">Continue Shopping</a>' +
+        '</div>';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => { updateBadge(); renderCheckout(); });
+  </script>
+</body>
+</html>

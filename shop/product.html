@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product — NOVA SAAS STUDIO</title>
+  <meta name="description" content="View product details.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0a;color:#e0e0e0;line-height:1.6;overflow-x:hidden}
+    a{color:#0066FF;text-decoration:none;transition:color .2s}
+    a:hover{color:#00D4FF}
+    ul{list-style:none}
+    ::selection{background:#0066FF;color:#fff}
+    ::-webkit-scrollbar{width:6px}
+    ::-webkit-scrollbar-track{background:#0a0a0a}
+    ::-webkit-scrollbar-thumb{background:#1a1a2e;border-radius:3px}
+    ::-webkit-scrollbar-thumb:hover{background:#0066FF}
+    .container{max-width:1200px;margin:0 auto;padding:0 24px}
+
+    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;padding:16px 0;background:rgba(10,10,10,0.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.05)}
+    .navbar .container{display:flex;align-items:center;justify-content:space-between}
+    .navbar .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;color:#fff;text-decoration:none}
+    .navbar .logo svg{flex-shrink:0}
+    .nav-links{display:flex;align-items:center;gap:32px}
+    .nav-links a{color:#999;font-size:14px;font-weight:500;transition:color .2s}
+    .nav-links a:hover{color:#fff}
+    .nav-links .cart-link{position:relative}
+    .nav-links .cart-badge{position:absolute;top:-8px;right:-12px;background:#0066FF;color:#fff;font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+    .nav-links .btn-primary{padding:8px 20px;font-size:13px;display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#0066FF,#0052CC);color:#fff;border-radius:8px;font-weight:600;border:none;cursor:pointer;transition:all .3s;text-decoration:none}
+    .nav-links .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,102,255,0.35);color:#fff}
+
+    .page{padding:120px 0 60px}
+    .back-link{display:inline-flex;align-items:center;gap:6px;color:#888;font-size:14px;margin-bottom:32px;transition:color .3s;font-family:inherit;background:none;border:none;cursor:pointer}
+    .back-link:hover{color:#0066FF}
+
+    .product-header{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-bottom:60px}
+    .product-icon{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:20px;display:flex;align-items:center;justify-content:center;padding:60px;min-height:320px}
+    .product-icon svg{width:120px;height:120px}
+    .product-info h1{font-size:clamp(28px,4vw,42px);font-weight:800;color:#fff;margin-bottom:8px}
+    .product-info .category{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#0066FF;margin-bottom:16px}
+    .product-info .tagline{font-size:17px;color:#aaa;margin-bottom:20px;line-height:1.6}
+    .product-info .description{font-size:15px;color:#888;line-height:1.7;margin-bottom:24px}
+
+    .features-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:32px}
+    .features-list li{display:flex;align-items:center;gap:10px;font-size:14px;color:#ccc}
+    .features-list li svg{flex-shrink:0}
+
+    .pricing-section{margin-bottom:60px}
+    .pricing-section h2{font-size:24px;font-weight:700;color:#fff;margin-bottom:24px}
+    .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .pricing-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:28px;transition:all .3s;position:relative}
+    .pricing-card.popular{border-color:#0066FF;background:rgba(0,102,255,0.06)}
+    .pricing-card.popular::before{content:'Most Popular';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#0066FF;color:#fff;font-size:11px;font-weight:700;padding:4px 14px;border-radius:12px;text-transform:uppercase;letter-spacing:.5px}
+    .pricing-card:hover{transform:translateY(-4px);border-color:rgba(0,102,255,0.3);box-shadow:0 12px 40px rgba(0,102,255,0.1)}
+    .pricing-card .plan-name{font-size:16px;font-weight:600;color:#fff;margin-bottom:4px}
+    .pricing-card .plan-price{font-size:36px;font-weight:800;color:#00D4FF;margin-bottom:4px}
+    .pricing-card .plan-price span{font-size:16px;color:#888;font-weight:400}
+    .pricing-card .plan-features{margin:20px 0}
+    .pricing-card .plan-features li{display:flex;align-items:center;gap:8px;font-size:13px;color:#999;padding:5px 0}
+    .pricing-card .plan-features li svg{flex-shrink:0}
+    .pricing-card .select-btn{width:100%;padding:12px;border-radius:10px;border:none;font-size:14px;font-weight:600;font-family:inherit;background:linear-gradient(135deg,#0066FF,#0052CC);color:#fff;cursor:pointer;transition:all .3s}
+    .pricing-card .select-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,102,255,0.4)}
+    .pricing-card.popular .select-btn{background:linear-gradient(135deg,#0066FF,#00D4FF)}
+    
+    .screenshots-section h2{font-size:24px;font-weight:700;color:#fff;margin-bottom:24px}
+    .screenshots-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .screenshot-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:40px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+    .screenshot-card span{font-size:13px;color:#888}
+
+    .footer{border-top:1px solid rgba(255,255,255,0.05);padding:40px 0;text-align:center}
+    .footer p{color:#555;font-size:13px}
+
+    .loader{text-align:center;padding:80px 0;color:#666;font-size:16px}
+
+    @media(max-width:768px){
+      .product-header{grid-template-columns:1fr;gap:24px}
+      .pricing-grid{grid-template-columns:1fr}
+      .screenshots-grid{grid-template-columns:1fr}
+      .features-list{grid-template-columns:1fr}
+      .product-icon{padding:40px;min-height:200px}
+      .product-icon svg{width:80px;height:80px}
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/novasaas/" class="logo">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <rect x="2" y="2" width="28" height="28" rx="8" stroke="#0066FF" stroke-width="2"/>
+          <path d="M10 22V14l6 8V10" stroke="#00D4FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        NOVA
+      </a>
+      <div class="nav-links">
+        <a href="/novasaas/">Home</a>
+        <a href="/novasaas/shop/">Shop</a>
+        <a href="/novasaas/shop/cart.html" class="cart-link">Cart <span class="cart-badge" id="cartCount">0</span></a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="page">
+    <div class="container">
+      <button class="back-link" onclick="history.back()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back to Shop
+      </button>
+      <div id="productContent" class="loader">Loading product...</div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container"><p>&copy; 2025 NOVA SAAS STUDIO. All rights reserved.</p></div>
+  </footer>
+
+  <script>
+    const ICONS = {
+      crm: '<svg width="120" height="120" viewBox="0 0 120 120" fill="none"><rect x="16" y="24" width="88" height="72" rx="12" stroke="#0066FF" stroke-width="3"/><circle cx="45" cy="50" r="10" stroke="#00D4FF" stroke-width="3"/><circle cx="75" cy="50" r="10" stroke="#00D4FF" stroke-width="3"/><path d="M36 76c0-8 8-12 24-12s24 4 24 12" stroke="#00D4FF" stroke-width="3" stroke-linecap="round"/></svg>',
+      chat: '<svg width="120" height="120" viewBox="0 0 120 120" fill="none"><rect x="16" y="16" width="88" height="72" rx="12" stroke="#0066FF" stroke-width="3"/><path d="M34 40h52M34 58h38M34 68h22" stroke="#00D4FF" stroke-width="3" stroke-linecap="round"/></svg>',
+      analytics: '<svg width="120" height="120" viewBox="0 0 120 120" fill="none"><rect x="16" y="16" width="88" height="88" rx="12" stroke="#0066FF" stroke-width="3"/><path d="M30 88V50l16 8V88M52 88V34l16 16v38M74 88V62l16-8v34" stroke="#00D4FF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      invoice: '<svg width="120" height="120" viewBox="0 0 120 120" fill="none"><rect x="24" y="12" width="72" height="96" rx="8" stroke="#0066FF" stroke-width="3"/><path d="M36 38h48M36 52h48M36 66h32M36 80h24" stroke="#00D4FF" stroke-width="3" stroke-linecap="round"/></svg>',
+      ai: '<svg width="120" height="120" viewBox="0 0 120 120" fill="none"><circle cx="60" cy="60" r="38" stroke="#0066FF" stroke-width="3"/><path d="M60 34v52M34 60h52" stroke="#00D4FF" stroke-width="3" stroke-linecap="round"/><circle cx="60" cy="60" r="16" stroke="#0066FF" stroke-width="3" stroke-dasharray="3 3"/></svg>',
+      docs: '<svg width="120" height="120" viewBox="0 0 120 120" fill="none"><path d="M30 16h42l22 22v68H30V16z" stroke="#0066FF" stroke-width="3"/><path d="M72 16v22h22M40 52h40M40 66h40M40 80h28" stroke="#00D4FF" stroke-width="3" stroke-linecap="round"/></svg>'
+    };
+    const SCREENSHOT_ICONS = {
+      contact: '<svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="4" y="6" width="40" height="36" rx="6" stroke="#0066FF" stroke-width="2"/><circle cx="24" cy="18" r="6" stroke="#00D4FF" stroke-width="2"/><path d="M12 38c0-6 6-9 12-9s12 3 12 9" stroke="#00D4FF" stroke-width="2" stroke-linecap="round"/></svg>',
+      pipeline: '<svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="2" y="8" width="14" height="32" rx="3" stroke="#0066FF" stroke-width="2"/><rect x="17" y="8" width="14" height="32" rx="3" stroke="#00D4FF" stroke-width="2"/><rect x="32" y="8" width="14" height="32" rx="3" stroke="#0066FF" stroke-width="2"/></svg>',
+      analytics: '<svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="4" y="4" width="40" height="40" rx="6" stroke="#0066FF" stroke-width="2"/><path d="M10 38V24l6 3V38M20 38V16l6 6v16M30 38V28l6-3v13" stroke="#00D4FF" stroke-width="2" stroke-linecap="round"/></svg>',
+      chat: '<svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="4" y="6" width="40" height="32" rx="6" stroke="#0066FF" stroke-width="2"/><path d="M12 16h24M12 24h16" stroke="#00D4FF" stroke-width="2" stroke-linecap="round"/></svg>',
+      settings: '<svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="8" stroke="#0066FF" stroke-width="2"/><path d="M24 4v6M24 38v6M4 24h6M38 24h6" stroke="#00D4FF" stroke-width="2" stroke-linecap="round"/></svg>',
+      dashboard: '<svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="4" y="4" width="40" height="40" rx="6" stroke="#0066FF" stroke-width="2"/><path d="M4 18h40M18 4v40" stroke="#00D4FF" stroke-width="1.5"/></svg>',
+      reports: '<svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="4" y="6" width="40" height="36" rx="6" stroke="#0066FF" stroke-width="2"/><path d="M14 34V22l6 4V34M26 34V16l6 6v12" stroke="#00D4FF" stroke-width="2" stroke-linecap="round"/></svg>',
+      invoices: '<svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="8" y="4" width="32" height="40" rx="4" stroke="#0066FF" stroke-width="2"/><path d="M14 16h20M14 22h20M14 28h14" stroke="#00D4FF" stroke-width="2" stroke-linecap="round"/></svg>',
+      payments: '<svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="4" y="12" width="40" height="24" rx="6" stroke="#0066FF" stroke-width="2"/><circle cx="24" cy="24" r="6" stroke="#00D4FF" stroke-width="2"/></svg>',
+      builder: '<svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="2" y="2" width="44" height="44" rx="8" stroke="#0066FF" stroke-width="2"/><path d="M16 12l8 8-8 8" stroke="#00D4FF" stroke-width="2" stroke-linecap="round"/></svg>',
+      agents: '<svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="12" stroke="#0066FF" stroke-width="2"/><path d="M24 14v20M14 24h20" stroke="#00D4FF" stroke-width="2" stroke-linecap="round"/></svg>',
+      editor: '<svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="4" y="6" width="40" height="36" rx="6" stroke="#0066FF" stroke-width="2"/><path d="M12 16h24M12 24h24M12 32h16" stroke="#00D4FF" stroke-width="2" stroke-linecap="round"/></svg>',
+      templates: '<svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="4" y="4" width="40" height="40" rx="6" stroke="#0066FF" stroke-width="2"/><path d="M4 16h40M16 4v40" stroke="#00D4FF" stroke-width="1.5"/></svg>',
+      collaboration: '<svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="16" cy="16" r="6" stroke="#0066FF" stroke-width="2"/><circle cx="32" cy="16" r="6" stroke="#0066FF" stroke-width="2"/><path d="M8 34c0-6 4-9 8-9s8 3 8 9" stroke="#00D4FF" stroke-width="2" stroke-linecap="round"/><path d="M24 34c0-6 4-9 8-9s8 3 8 9" stroke="#00D4FF" stroke-width="2" stroke-linecap="round"/></svg>'
+    };
+    const SCREENSHOT_LABELS = {
+      contact:'Contact Management', pipeline:'Deal Pipeline', analytics:'Analytics', chat:'Live Chat',
+      settings:'Settings', dashboard:'Dashboard', reports:'Reports', invoices:'Invoices',
+      payments:'Payments', builder:'Agent Builder', agents:'Agent Monitor', editor:'Document Editor',
+      templates:'Templates', collaboration:'Team Collaboration'
+    };
+
+    function getProducts() {
+      let p = localStorage.getItem('nova_products');
+      if (!p) return JSON.parse('[]');
+      return JSON.parse(p);
+    }
+
+    function getCart() {
+      let c = localStorage.getItem('nova_cart');
+      return c ? JSON.parse(c) : [];
+    }
+
+    function updateCartBadge() {
+      const c = getCart();
+      const el = document.getElementById('cartCount');
+      if (el) {
+        const qty = c.reduce((s,i) => s+i.qty, 0);
+        el.textContent = qty;
+        el.style.display = qty > 0 ? 'flex' : 'none';
+      }
+    }
+
+    function addToCart(id, plan) {
+      const cart = getCart();
+      const existing = cart.find(i => i.productId === id && i.plan === plan);
+      if (existing) { existing.qty += 1; }
+      else {
+        const prod = getProducts().find(p => p.id === id);
+        if (!prod) return;
+        const p = prod.pricing.find(x => x.name === plan);
+        cart.push({ productId: id, plan, productName: prod.name, price: p.price, qty: 1 });
+      }
+      localStorage.setItem('nova_cart', JSON.stringify(cart));
+      updateCartBadge();
+      const t = document.createElement('div');
+      t.textContent = 'Added to cart!';
+      Object.assign(t.style, { position:'fixed', bottom:'24px', right:'24px', background:'#0066FF', color:'#fff', padding:'12px 24px', borderRadius:'10px', fontSize:'14px', fontWeight:'600', zIndex:'9999', boxShadow:'0 8px 30px rgba(0,102,255,0.4)', opacity:'0', transform:'translateY(10px)', transition:'all .3s ease' });
+      document.body.appendChild(t);
+      requestAnimationFrame(() => { t.style.opacity='1'; t.style.transform='translateY(0)'; });
+      setTimeout(() => { t.style.opacity='0'; t.style.transform='translateY(10px)'; setTimeout(()=>t.remove(),300); }, 2000);
+    }
+
+    function loadProduct() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      if (!id) { document.getElementById('productContent').innerHTML = '<div class="loader">Product not found.</div>'; return; }
+      const products = getProducts();
+      if (!products.length) {
+        // fallback: load defaults if empty
+        const defs = [{"id":"p1","name":"NovaCRM","tagline":"AI-Powered CRM for Small Businesses","description":"NovaCRM is an intelligent customer relationship management platform designed specifically for small businesses.","category":"CRM","icon":"crm","features":["AI-powered lead scoring","Automated contact management","Email and calendar integration","Deal pipeline tracking","Custom workflow automation","Real-time analytics dashboard"],"pricing":[{"name":"Starter","price":29,"period":"/mo","popular":false,"features":["Up to 500 contacts","2 users","Basic AI insights","Email support"]},{"name":"Pro","price":79,"period":"/mo","popular":true,"features":["Up to 5,000 contacts","10 users","Advanced AI predictions","API access","Priority support"]},{"name":"Enterprise","price":199,"period":"/mo","popular":false,"features":["Unlimited contacts","Unlimited users","Custom AI models","Dedicated support","SLA guarantee"]}],"screenshots":["contact","pipeline","analytics"]},{"id":"p2","name":"NovaChat","tagline":"AI Customer Support Chatbot","description":"NovaChat is an AI-powered customer support chatbot that integrates seamlessly with WhatsApp and your website.","category":"Chat","icon":"chat","features":["WhatsApp & Messenger integration","Natural language understanding","Sentiment analysis","Automated ticket creation","Multi-language support","Live chat handoff"],"pricing":[{"name":"Starter","price":49,"period":"/mo"},{"name":"Pro","price":99,"period":"/mo","popular":true},{"name":"Enterprise","price":249,"period":"/mo"}],"screenshots":["chat","analytics","settings"]},{"id":"p3","name":"NovaAnalytics","tagline":"Business Intelligence with AI Insights","description":"NovaAnalytics transforms your raw business data into clear, actionable insights.","category":"Analytics","icon":"analytics","features":["Drag-and-drop dashboard builder","AI-generated insights","Anomaly detection","Predictive forecasting","Custom report scheduling","30+ data source connectors"],"pricing":[{"name":"Starter","price":39,"period":"/mo"},{"name":"Pro","price":89,"period":"/mo","popular":true},{"name":"Enterprise","price":189,"period":"/mo"}],"screenshots":["dashboard","reports","settings"]},{"id":"p4","name":"NovaInvoice","tagline":"Automated Invoicing & Payments","description":"NovaInvoice streamlines your billing workflow from invoice creation to payment collection.","category":"Finance","icon":"invoice","features":["Automated invoice generation","Recurring billing","Multi-currency support","Payment gateway integration","Smart payment reminders","Expense tracking"],"pricing":[{"name":"Starter","price":19,"period":"/mo"},{"name":"Pro","price":49,"period":"/mo","popular":true},{"name":"Enterprise","price":129,"period":"/mo"}],"screenshots":["invoices","payments","reports"]},{"id":"p5","name":"NovaAI","tagline":"Custom AI Agent Builder","description":"NovaAI is a powerful platform for building custom AI agents tailored to your business workflows.","category":"AI","icon":"ai","features":["Visual AI agent builder","Custom knowledge base","Workflow automation","API and webhook integration","Multi-model support (GPT, Claude)","Performance monitoring"],"pricing":[{"name":"Starter","price":99,"period":"/mo"},{"name":"Pro","price":249,"period":"/mo","popular":true},{"name":"Enterprise","price":599,"period":"/mo"}],"screenshots":["builder","agents","analytics"]},{"id":"p6","name":"NovaDocs","tagline":"AI Document Generation & Management","description":"NovaDocs revolutionizes how businesses create, manage, and collaborate on documents.","category":"Productivity","icon":"docs","features":["AI document generation","Smart templates library","Real-time collaboration","Version control","E-signature integration","Advanced document search"],"pricing":[{"name":"Starter","price":29,"period":"/mo"},{"name":"Pro","price":69,"period":"/mo","popular":true},{"name":"Enterprise","price":179,"period":"/mo"}],"screenshots":["editor","templates","collaboration"]}];
+        localStorage.setItem('nova_products', JSON.stringify(defs));
+        products.push(...defs);
+      }
+      const p = products.find(pr => pr.id === id);
+      if (!p) { document.getElementById('productContent').innerHTML = '<div class="loader">Product not found.</div>'; return; }
+
+      const iconHtml = ICONS[p.icon] || ICONS.crm;
+      const checkSvg = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7l3 3 5-5" stroke="#00D4FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+      const html = '<div class="product-header"><div class="product-icon">' + iconHtml + '</div><div class="product-info"><div class="category">' + p.category + '</div><h1>' + p.name + '</h1><p class="tagline">' + p.tagline + '</p><p class="description">' + p.description + '</p><ul class="features-list">' + p.features.map(f => '<li>' + checkSvg + f + '</li>').join('') + '</ul></div></div>' +
+        '<div class="pricing-section"><h2>Choose Your Plan</h2><div class="pricing-grid">' +
+        p.pricing.map(pl => '<div class="pricing-card' + (pl.popular ? ' popular' : '') + '"><div class="plan-name">' + pl.name + '</div><div class="plan-price">$' + pl.price + '<span>' + pl.period + '</span></div><ul class="plan-features">' + (pl.features || []).map(f => '<li>' + checkSvg + f + '</li>').join('') + '</ul><button class="select-btn" onclick="addToCart(\'' + p.id + '\',\'' + pl.name + '\')">Select ' + pl.name + '</button></div>').join('') +
+        '</div></div>' +
+        '<div class="screenshots-section"><h2>Screenshots</h2><div class="screenshots-grid">' +
+        (p.screenshots || []).map(s => '<div class="screenshot-card">' + (SCREENSHOT_ICONS[s] || SCREENSHOT_ICONS.dashboard) + '<span>' + (SCREENSHOT_LABELS[s] || s) + '</span></div>').join('') +
+        '</div></div>';
+
+      document.getElementById('productContent').innerHTML = html;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => { loadProduct(); updateCartBadge(); });
+  </script>
+</body>
+</html>

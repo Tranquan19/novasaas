@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orders — NOVA SAAS STUDIO Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0a;color:#e0e0e0;line-height:1.6;overflow-x:hidden}
+    ::selection{background:#0066FF;color:#fff}
+    ::-webkit-scrollbar{width:6px}
+    ::-webkit-scrollbar-track{background:#0a0a0a}
+    ::-webkit-scrollbar-thumb{background:#1a1a2e;border-radius:3px}
+
+    .layout{display:flex;min-height:100vh}
+    .sidebar{width:240px;background:rgba(255,255,255,0.02);border-right:1px solid rgba(255,255,255,0.05);padding:24px 16px;position:fixed;top:0;left:0;bottom:0;overflow-y:auto}
+    .sidebar-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;color:#fff;margin-bottom:32px;text-decoration:none}
+    .sidebar-nav{display:flex;flex-direction:column;gap:4px}
+    .sidebar-nav a{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;font-size:14px;font-weight:500;color:#888;text-decoration:none;transition:all .2s}
+    .sidebar-nav a:hover{background:rgba(255,255,255,0.04);color:#e0e0e0}
+    .sidebar-nav a.active{background:rgba(0,102,255,0.1);color:#0066FF}
+    .sidebar-nav a.logout{margin-top:auto;color:#555}
+    .sidebar-nav a.logout:hover{color:#ff4444;background:rgba(255,68,68,0.06)}
+    .main{margin-left:240px;flex:1;padding:32px 40px;min-height:100vh}
+    .main-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:16px}
+    .main-header h1{font-size:26px;font-weight:800;color:#fff}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;font-size:14px;font-weight:600;font-family:inherit;border:none;cursor:pointer;transition:all .3s;text-decoration:none}
+    .btn-primary{background:linear-gradient(135deg,#0066FF,#0052CC);color:#fff}
+    .btn-sm{padding:6px 14px;font-size:12px;border-radius:8px}
+    .btn-danger{background:rgba(255,68,68,0.15);color:#ff4444}
+
+    .filters-row{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+    .filters-row select,.filters-row input{padding:10px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#e0e0e0;font-size:13px;font-family:inherit;outline:none;transition:border-color .3s}
+    .filters-row select:focus,.filters-row input:focus{border-color:#0066FF}
+    .filters-row input{flex:1;min-width:200px;max-width:300px}
+
+    .table-container{overflow-x:auto;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px}
+    table{width:100%;border-collapse:collapse}
+    th{text-align:left;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#666;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.06)}
+    td{padding:14px 16px;font-size:13px;border-bottom:1px solid rgba(255,255,255,0.03);vertical-align:middle}
+    tr:last-child td{border-bottom:none}
+    .order-id{color:#0066FF;font-weight:600;font-family:monospace;font-size:12px}
+    .order-customer{color:#ccc}
+    .order-total{color:#00D4FF;font-weight:600}
+    .status-badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600}
+    .status-pending{background:rgba(255,183,0,0.1);color:#ffb700}
+    .status-processing{background:rgba(0,102,255,0.1);color:#0066FF}
+    .status-completed{background:rgba(0,212,255,0.1);color:#00D4FF}
+    .status-cancelled{background:rgba(255,68,68,0.1);color:#ff4444}
+    .status-select{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#e0e0e0;font-size:12px;padding:4px 8px;font-family:inherit;outline:none;cursor:pointer}
+    .status-select:focus{border-color:#0066FF}
+    .empty-state{text-align:center;padding:60px 24px;color:#666}
+    .order-items{font-size:12px;color:#888}
+    .order-items span{display:inline-block;margin-right:8px}
+    .footer-text{text-align:center;color:#555;font-size:12px;padding:20px 0}
+    @media(max-width:768px){
+      .sidebar{width:60px;padding:16px 8px}
+      .sidebar-logo span,.sidebar-nav a span{display:none}
+      .sidebar-nav a{justify-content:center;padding:10px}
+      .main{margin-left:60px;padding:24px 16px}
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a href="/novasaas/admin/" class="sidebar-logo"><svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect x="2" y="2" width="28" height="28" rx="8" stroke="#0066FF" stroke-width="2"/><path d="M10 22V14l6 8V10" stroke="#00D4FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>NOVA Admin</span></a>
+      <nav class="sidebar-nav" style="display:flex;flex-direction:column;height:calc(100vh - 100px)">
+        <a href="/novasaas/admin/"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="10" y="2" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="2" y="10" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="10" y="10" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/></svg><span>Dashboard</span></a>
+        <a href="/novasaas/admin/products.html"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="14" height="14" rx="3" stroke="currentColor" stroke-width="1.5"/><path d="M6 5h6M6 9h6M6 13h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span>Products</span></a>
+        <a href="/novasaas/admin/orders.html" class="active"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="3" y="2" width="12" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M6 6h6M6 9h6M6 12h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span>Orders</span></a>
+        <a href="/novasaas/admin/customers.html"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="6" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M3 16c0-4 3-6 6-6s6 2 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span>Customers</span></a>
+        <div style="flex:1"></div>
+        <a href="#" class="logout" onclick="logout()"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M6 15H4a1 1 0 01-1-1V4a1 1 0 011-1h2M12 11l3-3-3-3M15 8H7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Logout</span></a>
+      </nav>
+    </aside>
+    <main class="main">
+      <div class="main-header"><h1>Orders</h1></div>
+      <div class="filters-row">
+        <select id="statusFilter" onchange="renderTable()"><option value="all">All Status</option><option value="Pending">Pending</option><option value="Processing">Processing</option><option value="Shipped">Shipped</option><option value="Completed">Completed</option><option value="Cancelled">Cancelled</option></select>
+        <input type="text" id="searchInput" placeholder="Search by order ID or customer..." oninput="renderTable()">
+      </div>
+      <div class="table-container"><div id="ordersContainer"></div></div>
+      <div class="footer-text">&copy; 2025 NOVA SAAS STUDIO Admin</div>
+    </main>
+  </div>
+
+  <script>
+    if (localStorage.getItem('nova_admin_auth') !== 'true') window.location.href = '/novasaas/admin/login.html';
+    function logout() { localStorage.removeItem('nova_admin_auth'); window.location.href = '/novasaas/admin/login.html'; }
+
+    function getOrders() { let o = localStorage.getItem('nova_orders'); return o ? JSON.parse(o) : []; }
+    function saveOrders(o) { localStorage.setItem('nova_orders', JSON.stringify(o)); }
+    function formatPrice(n) { return '$' + n.toLocaleString(); }
+
+    function statusClass(s) {
+      const map = { 'Pending':'status-pending','Processing':'status-processing','Completed':'status-completed','Shipped':'status-processing','Delivered':'status-completed','Cancelled':'status-cancelled' };
+      return map[s] || 'status-pending';
+    }
+
+    function renderTable() {
+      let orders = getOrders();
+      const statusFilter = document.getElementById('statusFilter').value;
+      const q = document.getElementById('searchInput').value.toLowerCase();
+
+      if (statusFilter !== 'all') orders = orders.filter(o => o.status === statusFilter);
+      if (q) orders = orders.filter(o => o.id.toLowerCase().includes(q) || (o.customer.name || '').toLowerCase().includes(q));
+
+      const container = document.getElementById('ordersContainer');
+      if (orders.length === 0) {
+        container.innerHTML = '<div class="empty-state"><h3>No orders found</h3><p>Try different filters.</p></div>';
+        return;
+      }
+
+      container.innerHTML = '<table><thead><tr><th>Order ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Date</th><th>Status</th></tr></thead><tbody>' +
+        orders.map((o,i) => {
+          const itemsHtml = o.items.map(it => '<span>' + it.productName + ' x' + it.qty + '</span>').join(', ');
+          return '<tr>' +
+            '<td class="order-id">' + o.id + '</td>' +
+            '<td class="order-customer">' + o.customer.name + '<br><span style="font-size:11px;color:#666">' + o.customer.email + '</span></td>' +
+            '<td class="order-items">' + itemsHtml + '</td>' +
+            '<td class="order-total">' + formatPrice(o.total) + '</td>' +
+            '<td style="color:#888;font-size:12px">' + new Date(o.createdAt).toLocaleDateString() + '</td>' +
+            '<td><select class="status-select ' + statusClass(o.status) + '" onchange="updateStatus(' + i + ',this.value)">' +
+              ['Pending','Processing','Shipped','Completed','Cancelled'].map(s => '<option' + (s === o.status ? ' selected' : '') + '>' + s + '</option>').join('') +
+            '</select></td></tr>';
+        }).join('') + '</tbody></table>';
+    }
+
+    function updateStatus(idx, newStatus) {
+      let orders = getOrders();
+      orders[idx].status = newStatus;
+      saveOrders(orders);
+      // Optionally show a toast
+    }
+
+    document.addEventListener('DOMContentLoaded', renderTable);
+  </script>
+</body>
+</html>
