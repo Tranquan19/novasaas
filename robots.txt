@@ -1,0 +1,7 @@
+# robots.txt for NOVA SAAS STUDIO
+# https://novasaas.studio
+
+User-agent: *
+Allow: /
+
+Sitemap: https://novasaas.studio/sitemap.xml
