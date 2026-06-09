@@ -854,6 +854,10 @@
       .mobile-nav { display: none !important; }
     }
   </style>
+
+  <!-- GSAP Animation Library -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js" defer></script>
 </head>
 <body>
 
@@ -1443,7 +1447,6 @@
           ctx.fillStyle = `rgba(0, 102, 255, ${p.o})`;
           ctx.fill();
         }
-        // Draw connections
         for (let i = 0; i < particles.length; i++) {
           for (let j = i + 1; j < particles.length; j++) {
             const dx = particles[i].x - particles[j].x;
@@ -1464,48 +1467,119 @@
       animate();
     })();
 
-    /* ===== COUNTER ANIMATION ===== */
-    function animateCounters() {
+    /* ===== GSAP ANIMATIONS ===== */
+    // Wait for GSAP + ScrollTrigger to load (deferred scripts)
+    function initGSAP() {
+      if (typeof gsap === 'undefined') { setTimeout(initGSAP, 100); return; }
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      // ---------- HERO ENTRANCE TIMELINE ----------
+      const heroTL = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      heroTL
+        .from('.hero-badge',  { y: 30, opacity: 0, duration: 0.6 }, 0.2)
+        .from('.hero h1',     { y: 50, opacity: 0, duration: 0.8 }, 0.3)
+        .from('.hero h1 .gradient-text', { backgroundPosition: '200% 0', duration: 1.2, ease: 'power2.out' }, 0.5)
+        .from('.hero p',      { y: 30, opacity: 0, duration: 0.6 }, 0.6)
+        .from('.hero-actions a', { y: 20, opacity: 0, stagger: 0.15, duration: 0.5 }, 0.8)
+        .from('.stats-bar .stat-item', { y: 30, opacity: 0, stagger: 0.12, duration: 0.6 }, 1.0);
+
+      // ---------- STATS COUNTER (GSAP-powered) ----------
       const counters = document.querySelectorAll('.stat-number');
       counters.forEach(counter => {
         const target = parseInt(counter.getAttribute('data-target'));
         const suffix = target === 2 ? ' Weeks' : target === 98 ? '%' : '';
-        const update = () => {
-          const current = parseInt(counter.textContent);
-          const increment = Math.ceil(target / 40);
-          if (current < target) {
-            counter.textContent = Math.min(current + increment, target);
-            requestAnimationFrame(update);
-          } else {
-            counter.textContent = target + suffix;
+        ScrollTrigger.create({
+          trigger: '.stats-bar',
+          start: 'top 85%',
+          once: true,
+          onEnter: () => {
+            gsap.to(counter, {
+              duration: 1.8,
+              ease: 'power2.out',
+              innerHTML: target,
+              snap: { innerHTML: 1 },
+              onUpdate: () => { counter.textContent = Math.round(parseFloat(counter.textContent)) + suffix; }
+            });
           }
-        };
-        update();
+        });
+      });
+
+      // ---------- SCROLL REVEAL UTILITY ----------
+      function scrollReveal(selector, opts = {}) {
+        const els = document.querySelectorAll(selector);
+        if (!els.length) return;
+        gsap.from(els, {
+          y: opts.y || 40,
+          opacity: 0,
+          duration: opts.duration || 0.7,
+          stagger: opts.stagger || 0.1,
+          ease: opts.ease || 'power2.out',
+          scrollTrigger: {
+            trigger: opts.trigger || els[0].parentElement,
+            start: opts.start || 'top 85%',
+            once: true,
+            toggleActions: 'play none none none'
+          }
+        });
+      }
+
+      // ---------- SECTION REVEALS ----------
+      // Problem / Solution
+      scrollReveal('.problem-box, .solution-box', { stagger: 0.15, trigger: '.problem-solution' });
+
+      // Service cards
+      scrollReveal('.service-card', { stagger: 0.12, y: 50 });
+
+      // Process timeline steps — from bottom
+      scrollReveal('.process-step', { stagger: 0.15, y: 30 });
+
+      // Pricing cards
+      scrollReveal('.pricing-card', { stagger: 0.15, y: 50, trigger: '.pricing-grid' });
+
+      // Why cards
+      scrollReveal('.why-card', { stagger: 0.12, y: 40 });
+
+      // Testimonials
+      scrollReveal('.testimonial-card', { stagger: 0.12, y: 40 });
+
+      // FAQ items
+      scrollReveal('.faq-item', { stagger: 0.08, y: 20 });
+
+      // CTA section
+      scrollReveal('#pricing + section .section-title, #pricing + section .section-subtitle, #pricing + section .btn-primary', {
+        stagger: 0.15,
+        y: 30,
+        trigger: '#pricing + section'
+      });
+
+      // ---------- PROCESS TIMELINE STEPS ANIMATION ----------
+      ScrollTrigger.create({
+        trigger: '.process-timeline',
+        start: 'top 80%',
+        once: true,
+        onEnter: () => {
+          gsap.from('.process-step .step-number', {
+            scale: 0,
+            duration: 0.5,
+            stagger: 0.12,
+            ease: 'back.out(2)'
+          });
+        }
       });
     }
 
-    /* ===== INTERSECTION OBSERVER (Reveal + Counter) ===== */
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          // Stats counter
-          if (entry.target.closest('.hero')) {
-            animateCounters();
-          }
-        }
-      });
-    }, { threshold: 0.15 });
-
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-    // Also observe hero for counter
-    observer.observe(document.querySelector('.hero'));
+    // Start GSAP when DOM ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initGSAP);
+    } else {
+      initGSAP();
+    }
 
     /* ===== FAQ ACCORDION ===== */
     function toggleFaq(btn) {
       const item = btn.closest('.faq-item');
       const isOpen = item.classList.contains('open');
-      // Close all
       document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
       if (!isOpen) item.classList.add('open');
     }
@@ -1519,7 +1593,7 @@
       orbs[1]?.style.setProperty('transform', `translate(${-x}px, ${-y}px)`);
     });
 
-    console.log('NOVA SAAS STUDIO — From Idea to MVP. Fast.');
+    console.log('NOVA SAAS STUDIO — powered by GSAP animations');
   </script>
 </body>
 </html>
